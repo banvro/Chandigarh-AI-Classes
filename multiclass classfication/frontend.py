@@ -4,11 +4,14 @@ from PIL import Image, ImageTk
 import numpy as np
 import joblib
 import pandas as pd
+from PIL import ImageOps
 
-model = joblib.load("image_predictor.joblib")
+
+model = joblib.load("image_predictorr.joblib")
 
 def predictimage(filepath):
     img = Image.open(filepath)
+    img = ImageOps.grayscale(img)
     chnage_size = img.resize((28, 28))
     # chnage_type
     new_image = np.array(chnage_size)
@@ -16,10 +19,10 @@ def predictimage(filepath):
     image_row = new_image.flatten()
     print(image_row.shape)
     # print(image_row)
-    # reshaped_image = image_row.reshape(1, 784)
-    
+    reshaped_image = image_row.reshape(1, -1)
+     
 
-    output = model.predict(np.array([image_row]))
+    output = model.predict(reshaped_image)
 
     return output
 
@@ -34,7 +37,7 @@ def uploadimage():
     result = predictimage(file)
     # btn.config(text = "Predict", command = predictimage)
     print(result, "oooutttput")
-
+    
 
 
 app = tk.Tk()
